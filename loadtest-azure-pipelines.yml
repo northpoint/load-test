@@ -13,8 +13,14 @@ trigger:
 variables:
 
   dockerfilePath: '**/Dockerfile'
-  tag: '$(Build.BuildNumber)'
+  #tag: '$(Build.BuildNumber)'
+  tag: 20200717-1
   serviceName: loadtest
+
+  #load test settings toggle upper right variables
+   # clients: 5   num of users
+   # hatchrate: 5 every sec how much user to spawn until reaches total
+   # requests: 100  how many requests each
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -25,16 +31,17 @@ resources:
       type: github
       name: northpoint/microservices-demo
       endpoint: github-svcconn
+      ref: kevin-template-update
 
 stages:
-- stage: DockerBuildPush
-  displayName: Docker Build & Push stage
-  jobs:  
-  - template: /pipeline-templates/docker-builddeploy-pipeline.yaml@microservicesdemo  # Template reference
-    parameters:
-      tag: $(tag)
-      acrRepo: $(serviceName)
-      dockerfilePath: $(dockerfilePath)
+# - stage: DockerBuildPush
+#   displayName: Docker Build & Push stage
+#   jobs:  
+#   - template: /pipeline-templates/docker-builddeploy-pipeline.yaml@microservicesdemo  # Template reference
+#     parameters:
+#       tag: $(tag)
+#       acrRepo: $(serviceName)
+#       dockerfilePath: $(dockerfilePath)
       
 - stage: HelmDeploy
   displayName: Helm Deploy
@@ -43,3 +50,4 @@ stages:
     parameters:
       serviceName: $(serviceName)
       image: $(serviceName):$(tag)
+      arguments: --set clients=$(clients),hatchrate=$(hatchrate),requests=$(requests)
