@@ -50,4 +50,4 @@ stages:
     parameters:
       serviceName: $(serviceName)
       image: $(serviceName):$(tag)
-      arguments: --set clients=$(clients),hatchrate=$(hatchrate),requests=$(requests)
+      arguments: --set loadtest.enabled=true,loadtest.clients=$(clients),loadtest.hatchrate=$(hatchrate),loadtest.requests=$(requests),
