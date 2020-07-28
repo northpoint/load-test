@@ -20,7 +20,8 @@ variables:
   #load test settings toggle upper right variables
    # clients: 5   num of users
    # hatchrate: 5 every sec how much user to spawn until reaches total
-   # requests: 100  how many requests each
+   # runtime: 2m  h m s format run time
+   # enabled: true
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -31,7 +32,6 @@ resources:
       type: github
       name: northpoint/microservices-demo
       endpoint: github-svcconn
-      ref: kevin-template-update
 
 stages:
 # - stage: DockerBuildPush
@@ -50,4 +50,4 @@ stages:
     parameters:
       serviceName: $(serviceName)
       image: $(serviceName):$(tag)
-      arguments: --set loadtest.enabled=true,loadtest.clients=$(clients),loadtest.hatchrate=$(hatchrate),loadtest.requests=$(requests),
+      arguments: --set loadtest.enabled=$(enabled),loadtest.clients=$(clients),loadtest.hatchrate=$(hatchrate),loadtest.runtime=$(runtime)
